@@ -1,0 +1,57 @@
+# Gold Market Trend Classification - Fine-tuning Configuration
+
+# Dataset Configuration
+dataset:
+  train_size: 0.8
+  val_size: 0.1
+  test_size: 0.1
+  num_samples: 5000
+  seed: 42
+
+# Model Configuration
+model:
+  base_model: "Qwen/Qwen2-0.5B-Instruct"  # Smaller for CPU-friendly runs
+  model_type: "qwen"  # Options: "qwen", "llama"
+  max_seq_length: 128
+  
+# LoRA Configuration for efficient fine-tuning
+lora:
+  r: 16
+  lora_alpha: 32
+  lora_dropout: 0.05
+  bias: "none"
+  task_type: "CAUSAL_LM"
+  target_modules: ["q_proj", "v_proj"]  # Adjust based on model architecture
+
+# Training Configuration
+training:
+  output_dir: "./outputs/checkpoint"
+  num_train_epochs: 1
+  per_device_train_batch_size: 1
+  per_device_eval_batch_size: 1
+  gradient_accumulation_steps: 1
+  learning_rate: 2.0e-4
+  weight_decay: 0.01
+  warmup_steps: 10
+  logging_steps: 10
+  eval_steps: 50
+  save_steps: 0
+  max_grad_norm: 1.0
+  optim: "adamw_torch"
+  fp16: false
+  load_best_model_at_end: false
+  metric_for_best_model: "accuracy"
+  greater_is_better: true
+
+# Inference Configuration
+inference:
+  temperature: 0.7
+  top_p: 0.9
+  max_new_tokens: 50
+  do_sample: true
+
+# Trend Classes
+trends:
+  uptrend: "up"
+  downtrend: "down"
+  sideways: "sideways"
